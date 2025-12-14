@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma/client"
+}
+
+model Project {
+  id       Int       @id @default(autoincrement())
+  label    String    @db.VarChar(256)
+  circuits ProjectCircuit[]
+  markers  ProjectMarker[]
+
+  @@map("project")
+}
+
+model ProjectCircuit {
+  id          Int                                     @id @default(autoincrement())
+  label       String                                  @db.VarChar(256)
+  color       String                                  @db.VarChar(8)
+  geometry    Unsupported("geometry")
+  projectId   Int                                     @map("project_id")
+  project     Project                                 @relation(fields: [projectId], references: [id])
+
+  @@map("project_circuit")
+}
+
+model ProjectMarker {
+  id          Int                                     @id @default(autoincrement())
+  label       String                                  @db.VarChar(256)
+  point       Unsupported("geometry")
+  projectId   Int                                     @map("project_id")
+  project     Project                                 @relation(fields: [projectId], references: [id])
+
+  @@map("project_marker")
+}
+
+model AllowedUser {
+  email       String                                  @unique @db.VarChar(256)
+
+  @@map("allowed_user")
+}
