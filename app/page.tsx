@@ -1,12 +1,10 @@
-import MapWrapper from "./_components/MapWrapper";
+import { PrimeReactProvider } from "primereact/api";
+import AppWithQueryClient from "./AppWithQueryClient";
 
-export default function Home() {
+export default function AppPage() {
   return (
-    <>
-      <header>NextJS MAP</header>
-      <main>
-        <MapWrapper position={{ lat: 47.75, lng: 7.33333 }} zoom={100} />
-      </main>
-    </>
+    <PrimeReactProvider>
+      <AppWithQueryClient />
+    </PrimeReactProvider>
   );
 }
