@@ -22,7 +22,7 @@
     "leaflet-draw": "^1.0.4",
     "leaflet-routing-machine": "^3.2.12",
     "lodash": "^4.17.21",
-    "next": "16.0.6",
+    "next": "16.0.10",
     "postgres": "^3.4.7",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
