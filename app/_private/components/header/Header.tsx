@@ -12,7 +12,7 @@ import { signOut, useSession } from "next-auth/react";
  * This is located at the top of the application.
  */
 export default function Header() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const connectionMenuRef = useRef<Menu>(null);
   const connectionMenuItems = [

@@ -28,6 +28,7 @@ import CircuitLayer from "./CircuitLayer";
 import MapInstanceSetter from "./MapInstanceSetter";
 import { MapRoutingMachineControl } from "./MapRoutingMachineControl";
 import { RouteResult } from "../../types/leaflet-routing-machine";
+import * as turf from "@turf/turf";
 
 export interface MapProps {
   position: L.LatLngLiteral;
@@ -40,6 +41,7 @@ export interface MapProps {
   onAddPolyline: (polyline: GeometryLineString) => void;
   onEditCircuit: (circuit: ProjectCircuit) => void;
   onRemoveCircuit: (circuit: ProjectCircuit) => void;
+  onUpdateCircuitGeometry: (circuit: ProjectCircuit) => void;
   onAddMarker: (point: GeometryPoint) => void;
 }
 
@@ -53,6 +55,7 @@ export default function Map({
   onAddPolyline,
   onEditCircuit,
   onRemoveCircuit,
+  onUpdateCircuitGeometry,
   onAddMarker,
 }: MapProps) {
   const mapRef = useRef<L.Map | null>(null);
@@ -62,7 +65,7 @@ export default function Map({
     GeometryLineString | undefined
   >(undefined);
   const [selectedPolylineId, setSelectedPolylineId] = useState<number | null>(
-    null
+    null,
   );
   const [loaded, setLoaded] = useState<boolean>(false);
   const [currentRoutingMachinePolyline, setCurrentRoutingMachinePolyline] =
@@ -98,14 +101,14 @@ export default function Map({
     (polyline: GeometryLineString) => {
       setCurrentDrawPolyline(polyline);
     },
-    []
+    [],
   );
 
   const onControlClickValidateAddPolyline = useCallback(
     (polyline: GeometryLineString) => {
       onAddPolyline(polyline);
     },
-    [onAddPolyline]
+    [onAddPolyline],
   );
 
   const onControlClickCancelAddPolyline = useCallback(() => {
@@ -119,6 +122,11 @@ export default function Map({
     }
   }, [editMode]);
 
+  /**
+   * Edits a circuit.
+   *
+   * @param id id of the circuit to edit.
+   */
   const editCircuit = useCallback(
     (id: number) => {
       const circuitToEdit = project?.circuits?.find((circ) => circ.id === id);
@@ -126,9 +134,14 @@ export default function Map({
         onEditCircuit(circuitToEdit);
       }
     },
-    [onEditCircuit]
+    [onEditCircuit],
   );
 
+  /**
+   * Deletes a circuit.
+   *
+   * @param id id of the circuit to delete.
+   */
   const deleteCircuit = useCallback(
     (id: number) => {
       const circuitToDelete = project?.circuits?.find((circ) => circ.id === id);
@@ -139,14 +152,80 @@ export default function Map({
         onRemoveCircuit(circuitToDelete);
       }
     },
-    [onRemoveCircuit]
+    [onRemoveCircuit],
   );
 
+  /**
+   * Deletes the selected circuit.
+   */
   const deleteSelectedCircuit = useCallback(() => {
     if (selectedPolylineId) {
       deleteCircuit(selectedPolylineId);
     }
   }, [selectedPolylineId, deleteCircuit]);
+
+  /**
+   * Adds a point to a circuit.
+   *
+   * @param id id of the circuit.
+   * @param latlng coordinates of the point to add.
+   */
+  const addPointToCircuit = useCallback(
+    (id: number, latlng: L.LatLng) => {
+      const circuitToModify = project?.circuits?.find((circ) => circ.id === id);
+      if (circuitToModify) {
+        // Converts actual coordinates from LineString to LatLng.
+        const currentCoordsLatLng = lineStringToLatLngs(
+          circuitToModify.geometry,
+        );
+
+        // Conversion to be able to use Turf.
+        const line = turf.lineString(
+          currentCoordsLatLng.map((c) => [c.lng, c.lat]),
+        );
+        const point = turf.point([latlng.lng, latlng.lat]);
+
+        // Finds the nearest segment from the point to add.
+        const nearestSegment = turf.nearestPointOnLine(line, point);
+
+        // Inserts the point at the good location
+        const insertIndex = nearestSegment.properties.index! + 1;
+        const newCoords = [...currentCoordsLatLng];
+        newCoords.splice(insertIndex, 0, latlng);
+
+        // Creates the new geometry.
+        const updatedCircuit: ProjectCircuit = {
+          ...circuitToModify,
+          geometry: latLngsToLineString(newCoords),
+        };
+
+        // Transmits the modification to the App component.
+        onEditCircuit(updatedCircuit);
+      }
+    },
+    [project, onEditCircuit],
+  );
+
+  /**
+   * Updates when dragging the circuit geometry.
+   *
+   * @param id id of the circuit.
+   * @param newLatLngs new geometry.
+   */
+  const updateCircuitGeometry = useCallback(
+    (id: number, newLatLngs: L.LatLng[]) => {
+      let circuitToModify =
+        project?.circuits?.find((circ) => circ.id === id) || null;
+      if (circuitToModify) {
+        const updatedCircuit: ProjectCircuit = {
+          ...circuitToModify,
+          geometry: latLngsToLineString(newLatLngs),
+        };
+        onUpdateCircuitGeometry(updatedCircuit);
+      }
+    },
+    [onUpdateCircuitGeometry],
+  );
 
   /**
    * Right clic events.
@@ -176,11 +255,17 @@ export default function Map({
     setLoaded(true);
   }, []);
 
+  /**
+   * Prepares the circuits to display them on the circuit layer.
+   *
+   * @returns circuits to display.
+   */
   const prepareCircuitsForCircuitLayer = (): ProjectCircuit[] => {
-    const circs: ProjectCircuit[] = [];
+    let circs: ProjectCircuit[] = [];
     if (project?.circuits) {
       circs.push(...project.circuits);
     }
+
     if (currentDrawPolyline) {
       circs.push({
         geometry: currentDrawPolyline,
@@ -198,6 +283,12 @@ export default function Map({
     return circs;
   };
 
+  /**
+   * Calculates a route (leaflet routing machine).
+   *
+   * @param points  points of the original circuit.
+   * @returns calculated route.
+   */
   const calculateRoute = (points: L.LatLng[]) => {
     // Uses the router of leaflet routing machine
     const router = (L as any).Routing.osrmv1({
@@ -220,22 +311,26 @@ export default function Map({
     });
   };
 
+  /**
+   * Calculates a route (leaflet routing machine) for the selected polyline.
+   *
+   * @returns calculated route.
+   */
   const calculateRouteForSelectedPolyline = async () => {
     if (selectedPolylineId) {
       const selectedCircuitGeometry = project?.circuits?.find(
-        (circ) => circ.id === selectedPolylineId
+        (circ) => circ.id === selectedPolylineId,
       )?.geometry;
       if (selectedCircuitGeometry) {
         const latLngCircuit = lineStringToLatLngs(selectedCircuitGeometry);
 
         if (latLngCircuit) {
           const routedPolyline = (await calculateRoute(
-            latLngCircuit
+            latLngCircuit,
           )) as RouteResult;
           if (routedPolyline) {
-            console.log("routedPolyline", routedPolyline);
             setCurrentRoutingMachinePolyline(
-              latLngsToLineString(routedPolyline.coordinates)
+              latLngsToLineString(routedPolyline.coordinates),
             );
           }
         }
@@ -281,6 +376,8 @@ export default function Map({
               onSelect={setSelectedPolylineId}
               onEdit={editCircuit}
               onDelete={deleteCircuit}
+              onAddPointToCircuit={addPointToCircuit}
+              onUpdateCircuitGeometry={updateCircuitGeometry}
             />
             {!visibleSidebar && (
               <MapSidebarMenuControl

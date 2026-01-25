@@ -60,9 +60,10 @@ export const MapRoutingMachineControl = ({
    * Creates and manages the control.
    */
   useEffect(() => {
-    const MapRoutingMachine = L.Control.extend({
+    const MapRoutingMachineControl = L.Control.extend({
       onAdd: function () {
         const container = L.DomUtil.create("div");
+        container.ariaLabel = "routing-machine-control";
         containerRef.current = container;
 
         L.DomEvent.disableClickPropagation(container);
@@ -71,8 +72,9 @@ export const MapRoutingMachineControl = ({
         const button = L.DomUtil.create(
           "button",
           "pi pi-map bg-white border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        button.ariaLabel = "routing-machine-control-button";
 
         L.DomEvent.on(
           button,
@@ -82,14 +84,14 @@ export const MapRoutingMachineControl = ({
               onClickCreateRouteRef.current();
             }
           },
-          this
+          this,
         );
 
         return container;
       },
     });
 
-    const control = new MapRoutingMachine();
+    const control = new MapRoutingMachineControl();
 
     map.addControl(control);
     return () => {

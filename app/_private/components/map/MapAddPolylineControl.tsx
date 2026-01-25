@@ -165,9 +165,10 @@ export const MapAddPolylineControl = ({
    * Creates and manages the control.
    */
   useEffect(() => {
-    const MapDrawPolylineControl = L.Control.extend({
+    const MapAddPolylineControl = L.Control.extend({
       onAdd: function () {
         const container = L.DomUtil.create("div", "bg-green flex flex-row");
+        container.ariaLabel = "add-polyline-control";
         containerRef.current = container;
 
         L.DomEvent.disableClickPropagation(container);
@@ -175,8 +176,9 @@ export const MapAddPolylineControl = ({
         const buttonStart = L.DomUtil.create(
           "button",
           "pi pi-pen-to-square bg-white border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        buttonStart.ariaLabel = "add-polyline-control-button-start";
         buttonStartRef.current = buttonStart;
         buttonStart.title = "Draw shape";
         buttonStart.style.display = "inline-block";
@@ -185,8 +187,9 @@ export const MapAddPolylineControl = ({
         const buttonValidate = L.DomUtil.create(
           "button",
           "pi pi-check bg-white text-green-600 border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        buttonValidate.ariaLabel = "add-polyline-control-button-validate";
         buttonValidateRef.current = buttonValidate;
         buttonValidate.title = "Validate shape";
         buttonValidate.style.display = "none";
@@ -194,8 +197,9 @@ export const MapAddPolylineControl = ({
         const buttonCancel = L.DomUtil.create(
           "button",
           "pi pi-times bg-white text-red-600 border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        buttonCancel.ariaLabel = "add-polyline-control-button-cancel";
         buttonCancelRef.current = buttonCancel;
         buttonCancel.title = "Cancel shape";
         buttonCancel.style.display = "none";
@@ -211,7 +215,7 @@ export const MapAddPolylineControl = ({
               }
             }
           },
-          this
+          this,
         );
 
         L.DomEvent.on(
@@ -233,7 +237,7 @@ export const MapAddPolylineControl = ({
               }
             }
           },
-          this
+          this,
         );
 
         L.DomEvent.on(
@@ -248,14 +252,14 @@ export const MapAddPolylineControl = ({
               }
             }
           },
-          this
+          this,
         );
 
         return container;
       },
     });
 
-    const control = new MapDrawPolylineControl();
+    const control = new MapAddPolylineControl();
     map.addControl(control);
 
     return () => {

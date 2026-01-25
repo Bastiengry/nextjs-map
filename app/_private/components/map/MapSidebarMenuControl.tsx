@@ -61,16 +61,26 @@ export const MapSidebarMenuControl = ({
       },
       onAdd: function () {
         const container = L.DomUtil.create("div");
+        container.ariaLabel = "sidebar-menu-control";
+
         const button = L.DomUtil.create(
           "button",
           "pi pi-bars bg-white p-1 border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        button.ariaLabel = "sidebar-menu-control-button";
 
         L.DomEvent.disableClickPropagation(container);
 
         if (onClickOpenSideMenuRef.current) {
-          L.DomEvent.on(button, "click", onClickOpenSideMenuRef.current, this);
+          L.DomEvent.on(
+            button,
+            "click",
+            () => {
+              onClickOpenSideMenuRef.current?.();
+            },
+            this,
+          );
         }
 
         return container;

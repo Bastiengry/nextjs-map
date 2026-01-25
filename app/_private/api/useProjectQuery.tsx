@@ -5,7 +5,7 @@ import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
 export function useGetProject(
   queryClient: QueryClient,
-  id: number | null | undefined
+  id: number | null | undefined,
 ) {
   return useQuery<Project>(
     {
@@ -20,7 +20,7 @@ export function useGetProject(
         }
       },
     },
-    queryClient
+    queryClient,
   );
 }
 
@@ -37,7 +37,7 @@ export function useProjectIdLabelQuery() {
 
 export function usePostProject(
   queryClient: QueryClient,
-  onPostSuccess: (project: Project) => void
+  onPostSuccess: (project: Project) => void,
 ) {
   return useMutation({
     mutationFn: async (project: Project) => {
@@ -65,6 +65,28 @@ export function usePutProject(queryClient: QueryClient) {
       });
       if (!res.ok) throw new Error("Erreur API");
       return res.json();
+    },
+    onMutate: async (project: Project) => {
+      // Cancels the getch requests to avoid to replace the optimistic update
+      await queryClient.cancelQueries({ queryKey: ["project", project.id] });
+
+      // Saves the old value in the rollback, in case of error
+      const previousProject = queryClient.getQueryData(["project", project.id]);
+
+      // Updates the cache immediately
+      queryClient.setQueryData(["project", project.id], project);
+
+      // Returns the previous value
+      return { previousProject };
+    },
+    onError: (err, project, context) => {
+      // On resets the old value
+      if (context?.previousProject) {
+        queryClient.setQueryData(
+          ["project", project.id],
+          context.previousProject,
+        );
+      }
     },
     onSuccess: (project: Project) => {
       queryClient.setQueryData(["project", project.id], project);

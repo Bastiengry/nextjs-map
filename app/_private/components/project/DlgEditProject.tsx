@@ -17,7 +17,7 @@ export default function DlgEditProject({
   onCancel,
 }: DlgEditProjectProps) {
   const [modifiedProject, setModifiedProject] = useState<Project>(
-    _.cloneDeep(project)
+    _.cloneDeep(project),
   );
 
   const onDataChange = (name: string, value: string) => {
@@ -26,12 +26,18 @@ export default function DlgEditProject({
   };
 
   return (
-    <Dialog header="Edit project" visible={true} onHide={() => onCancel()}>
+    <Dialog
+      header="Edit project"
+      aria-label="dlg-edit-project"
+      visible={true}
+      onHide={() => onCancel()}
+    >
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-2">
+        <div aria-label="project-label-field" className="flex flex-col gap-2">
           <label htmlFor="label">Project label</label>
           <InputText
             id="label"
+            aria-label="project-label-field-input"
             aria-describedby="label-help"
             value={modifiedProject.label}
             onChange={(e) => onDataChange("label", e.target.value)}
@@ -39,8 +45,16 @@ export default function DlgEditProject({
           <small id="label-help">Enter a project name.</small>
         </div>
         <div className="flex flex-row justify-end gap-2">
-          <Button label="OK" onClick={() => onSaveProject(modifiedProject)} />
-          <Button label="Cancel" onClick={() => onCancel()} />
+          <Button
+            aria-label="validate-button"
+            label="OK"
+            onClick={() => onSaveProject(modifiedProject)}
+          />
+          <Button
+            aria-label="cancel-button"
+            label="Cancel"
+            onClick={() => onCancel()}
+          />
         </div>
       </div>
     </Dialog>

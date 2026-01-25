@@ -88,7 +88,7 @@ export default function App() {
       });
       setEditMode(EditModeTypes.CREATE_CIRCUIT);
     },
-    []
+    [],
   );
 
   const addCircuitToProject = useCallback(
@@ -98,7 +98,7 @@ export default function App() {
       }
       prj.circuits = [...prj.circuits, circuit];
     },
-    []
+    [],
   );
 
   const onEndAddCircuit = useCallback(
@@ -110,7 +110,7 @@ export default function App() {
         setEditMode(EditModeTypes.VIEW);
       }
     },
-    [project, addCircuitToProject]
+    [project, addCircuitToProject],
   );
 
   const onEditCircuit = useCallback(
@@ -118,10 +118,22 @@ export default function App() {
       setEditedCircuit(circuitToEdit);
       setEditMode(EditModeTypes.EDIT_CIRCUIT);
     },
-    [project]
+    [project],
   );
 
   const onSaveModifiedCircuit = (circuit: ProjectCircuit) => {
+    if (project) {
+      const prj = _.cloneDeep(project);
+      if (prj.circuits) {
+        prj.circuits = prj.circuits.filter((circ) => circ.id !== circuit.id);
+        prj.circuits.push(circuit);
+        putProject.mutate(prj);
+        setEditMode(EditModeTypes.VIEW);
+      }
+    }
+  };
+
+  const onUpdateCircuitGeometry = (circuit: ProjectCircuit) => {
     if (project) {
       const prj = _.cloneDeep(project);
       if (prj.circuits) {
@@ -146,7 +158,7 @@ export default function App() {
         },
       ];
     },
-    []
+    [],
   );
 
   const onRemoveCircuit = useCallback(
@@ -155,13 +167,13 @@ export default function App() {
         const prj = _.cloneDeep(project);
         if (prj.circuits) {
           prj.circuits = prj.circuits.filter(
-            (circ) => circ.id !== circuitToDelete.id
+            (circ) => circ.id !== circuitToDelete.id,
           );
         }
         putProject.mutate(prj);
       }
     },
-    [project]
+    [project],
   );
 
   const onAddMarkerPoint = useCallback(
@@ -172,7 +184,7 @@ export default function App() {
         putProject.mutate(prj);
       }
     },
-    [project]
+    [project],
   );
 
   return (
@@ -206,6 +218,7 @@ export default function App() {
                 onAddMarker={onAddMarkerPoint}
                 onEditCircuit={onEditCircuit}
                 onRemoveCircuit={onRemoveCircuit}
+                onUpdateCircuitGeometry={onUpdateCircuitGeometry}
               />
             </div>
             {editMode === EditModeTypes.OPEN_PROJECT && (

@@ -47,16 +47,18 @@ export const MapLocationControl = ({ mapMode }: MapLocationControlProps) => {
     const MapLocationControl = L.Control.extend({
       onAdd: function () {
         const container = L.DomUtil.create("div");
+        container.ariaLabel = "location-control";
         containerRef.current = container;
 
         L.DomEvent.disableClickPropagation(container);
 
-        container.title = "Center on your position";
         const button = L.DomUtil.create(
           "button",
           "pi pi-map-marker bg-white border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        button.ariaLabel = "location-control-button";
+        button.title = "Center on your position";
 
         L.DomEvent.on(
           button,
@@ -64,7 +66,7 @@ export const MapLocationControl = ({ mapMode }: MapLocationControlProps) => {
           (e) => {
             map.locate();
           },
-          this
+          this,
         );
 
         return container;

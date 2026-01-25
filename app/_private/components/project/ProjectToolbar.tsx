@@ -73,15 +73,17 @@ export default function ProjectToolbar({
   ];
 
   return (
-    <div className="flex-1 flex gap-1 m-1">
+    <div className="flex-1 flex gap-1 m-1" aria-label="project-toolbar">
       <div className="flex-none flex gap-1">
         <Button
+          aria-label="create-project-button"
           icon="pi pi-plus"
           size="small"
           severity="secondary"
           onClick={onClickCreateProject}
         />
         <Button
+          aria-label="open-project-button"
           icon="pi pi-folder-open"
           size="small"
           severity="secondary"
@@ -90,6 +92,7 @@ export default function ProjectToolbar({
       </div>
       <div className="flex-1 flex">
         <InputText
+          aria-label="current-project-text"
           disabled
           className="flex-1 p-inputtext-sm"
           value={project?.label || "No project selected"}
@@ -104,12 +107,20 @@ export default function ProjectToolbar({
       </div>
       <div className="flex-none flex gap-1">
         <SplitButton
+          aria-label="edit-project-button"
           icon="pi pi-pencil"
           label="Edit"
           severity="secondary"
           onClick={onClickEditProject}
           model={projectExtendBtnItems}
           size="small"
+          pt={{
+            menuButton: {
+              root: {
+                "aria-label": "expand-edit-menu",
+              },
+            },
+          }}
         />
       </div>
     </div>
