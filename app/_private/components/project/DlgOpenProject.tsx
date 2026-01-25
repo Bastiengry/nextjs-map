@@ -22,12 +22,21 @@ export default function DlgOpenProject({
   } = useProjectIdLabelQuery();
 
   return (
-    <Dialog header="Open project" visible={true} onHide={() => onCancel()}>
+    <Dialog
+      header="Open project"
+      aria-label="dlg-open-project"
+      visible={true}
+      onHide={() => onCancel()}
+    >
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-2">
+        <div
+          className="flex flex-col gap-2"
+          aria-label="project-selector-field"
+        >
           <label htmlFor="selectedProjectId">Project label</label>
           <Dropdown
             id="selectedProject"
+            aria-label="project-selector-field-select"
             value={selectedProject}
             onChange={(event: DropdownChangeEvent) =>
               setSelectedProject(event.target.value)
@@ -48,12 +57,17 @@ export default function DlgOpenProject({
         <div className="flex flex-row justify-end gap-2">
           <Button
             label="OK"
+            aria-label="validate-button"
             onClick={() =>
               !!selectedProject && onOpenProject(selectedProject?.id)
             }
             disabled={!selectedProject}
           />
-          <Button label="Cancel" onClick={() => onCancel()} />
+          <Button
+            aria-label="cancel-button"
+            label="Cancel"
+            onClick={() => onCancel()}
+          />
         </div>
       </div>
     </Dialog>

@@ -1,9 +1,12 @@
+import { MouseEventHandler } from "react";
+
 interface CircuitSelectionContextMenuProps {
   x: number;
   y: number;
   onClose: () => void;
   onClickEditCircuit: () => void;
   onClickDeleteCircuit: () => void;
+  onClickAddPointToCircuit: () => void;
 }
 
 const CircuitSelectionContextMenu = ({
@@ -12,6 +15,7 @@ const CircuitSelectionContextMenu = ({
   onClose,
   onClickEditCircuit,
   onClickDeleteCircuit,
+  onClickAddPointToCircuit,
 }: CircuitSelectionContextMenuProps) => {
   return (
     <div
@@ -31,6 +35,20 @@ const CircuitSelectionContextMenu = ({
         }}
       >
         <li
+          onClick={(e: React.MouseEvent<HTMLLIElement>) => {
+            e.stopPropagation();
+            onClickAddPointToCircuit();
+            onClose();
+          }}
+          style={{
+            padding: "4px 4px",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          ➕ Ajouter un point
+        </li>
+        <li
           onClick={(e) => {
             e.stopPropagation();
             onClickEditCircuit();
@@ -42,7 +60,7 @@ const CircuitSelectionContextMenu = ({
             fontWeight: "bold",
           }}
         >
-          Modifier la configuration du circuit
+          ⚙️ Modifier la configuration du circuit
         </li>
         <li
           onClick={(e) => {

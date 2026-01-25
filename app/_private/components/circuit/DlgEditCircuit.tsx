@@ -26,7 +26,7 @@ export default function DlgEditCircuit({
   };
 
   return (
-    <Dialog header="Create circuit" visible={true} onHide={() => onCancel()}>
+    <Dialog header="Edit circuit" visible={true} onHide={() => onCancel()}>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="label">Circuit label</label>

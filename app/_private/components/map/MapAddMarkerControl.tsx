@@ -126,6 +126,7 @@ export const MapAddMarkerControl = ({
     const MapAddMarkerControl = L.Control.extend({
       onAdd: function () {
         const container = L.DomUtil.create("div");
+        container.ariaLabel = "add-marker-control";
         containerRef.current = container;
 
         L.DomEvent.disableClickPropagation(container);
@@ -134,8 +135,9 @@ export const MapAddMarkerControl = ({
         const button = L.DomUtil.create(
           "button",
           "pi pi-thumbtack bg-white p-1 border-gray-400 border-1 w-8 h-8 cursor-pointer",
-          container
+          container,
         );
+        button.ariaLabel = "add-marker-control-button";
         buttonRef.current = button;
 
         L.DomEvent.on(
@@ -154,7 +156,7 @@ export const MapAddMarkerControl = ({
               }
             }
           },
-          this
+          this,
         );
 
         return container;

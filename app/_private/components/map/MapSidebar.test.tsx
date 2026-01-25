@@ -3,15 +3,6 @@ import userEvent from "@testing-library/user-event";
 import MapSidebar from "./MapSidebar";
 import { Project } from "../../types/Project";
 
-const hex2rgb = (hex: string) => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  // return {r, g, b}
-  return { r, g, b };
-};
-
 describe("The MapSidebar component ", () => {
   it("should display well", async () => {
     // Creates the dummy project.
@@ -39,7 +30,7 @@ describe("The MapSidebar component ", () => {
         project={dummyProject}
         onVisibilityChanged={() => {}}
         onMapPanTo={() => {}}
-      />
+      />,
     );
 
     const mapSideBarElem = await screen.findByLabelText("map-sidebar");
@@ -63,7 +54,7 @@ describe("The MapSidebar component ", () => {
 
     // Checks that the menu item linked to the circuit is displayed.
     const circuit1MenuItem = within(circuitsMenu).getByLabelText(
-      "circuit-menu-item-renderer-1"
+      "circuit-menu-item-renderer-1",
     );
 
     // Checks the presence of the label of the circuit.
@@ -111,7 +102,7 @@ describe("The MapSidebar component ", () => {
         project={dummyProject}
         onVisibilityChanged={mockCloseBtnCallback}
         onMapPanTo={() => {}}
-      />
+      />,
     );
 
     // Get the sidebar.
@@ -156,7 +147,7 @@ describe("The MapSidebar component ", () => {
         project={dummyProject}
         onVisibilityChanged={() => {}}
         onMapPanTo={mockLocateBtnCallback}
-      />
+      />,
     );
 
     // Get the sidebar.
