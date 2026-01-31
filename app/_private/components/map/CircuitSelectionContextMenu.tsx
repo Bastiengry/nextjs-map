@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface CircuitSelectionContextMenuProps {
   x: number;
   y: number;
@@ -15,13 +17,17 @@ const CircuitSelectionContextMenu = ({
   onClickDeleteCircuit,
   onClickAddPointToCircuit,
 }: CircuitSelectionContextMenuProps) => {
+  const { t } = useTranslation();
+
   return (
     <div
+      aria-label="circuit-selection-context-menu"
       className="custom-context-menu"
       style={{ top: y, left: x, position: "fixed", zIndex: 1000 }}
       onMouseLeave={onClose} // Closes the menu if the mouse gets out
     >
       <ul
+        aria-label="circuit-selection-context-menu-ul"
         style={{
           listStyle: "none",
           margin: 0,
@@ -33,6 +39,7 @@ const CircuitSelectionContextMenu = ({
         }}
       >
         <li
+          aria-label="circuit-selection-context-menu-li-add-point"
           onClick={(e: React.MouseEvent<HTMLLIElement>) => {
             e.stopPropagation();
             onClickAddPointToCircuit();
@@ -44,9 +51,10 @@ const CircuitSelectionContextMenu = ({
             fontWeight: "bold",
           }}
         >
-          ➕ Ajouter un point
+          ➕ {t("circuit.addPoint")}
         </li>
         <li
+          aria-label="circuit-selection-context-menu-li-edit-circuit-conf"
           onClick={(e) => {
             e.stopPropagation();
             onClickEditCircuit();
@@ -58,9 +66,10 @@ const CircuitSelectionContextMenu = ({
             fontWeight: "bold",
           }}
         >
-          ⚙️ Modifier la configuration du circuit
+          ⚙️ {t("circuit.editCircuitConfiguration")}
         </li>
         <li
+          aria-label="circuit-selection-context-menu-li-delete-circuit"
           onClick={(e) => {
             e.stopPropagation();
             onClickDeleteCircuit();
@@ -73,7 +82,7 @@ const CircuitSelectionContextMenu = ({
             fontWeight: "bold",
           }}
         >
-          🗑️ Supprimer le circuit
+          🗑️ {t("circuit.deleteCircuit")}
         </li>
       </ul>
     </div>

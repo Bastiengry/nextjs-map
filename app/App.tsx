@@ -22,6 +22,7 @@ import DlgAddCircuit from "./_private/components/circuit/DlgAddCircuit";
 import DlgEditCircuit from "./_private/components/circuit/DlgEditCircuit";
 import { useSession } from "next-auth/react";
 import ProjectToolbarWrapper from "./_private/components/project/ProjectToolbarWrapper";
+import "./i18n";
 
 export default function App() {
   const { data: session, status } = useSession();

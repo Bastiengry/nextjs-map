@@ -5,6 +5,7 @@ import { Menu } from "primereact/menu";
 import { useRef } from "react";
 import { loginWithGoogle } from "../../actions/auth";
 import { signOut, useSession } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Header.
@@ -12,16 +13,17 @@ import { signOut, useSession } from "next-auth/react";
  * This is located at the top of the application.
  */
 export default function Header() {
+  const { t } = useTranslation();
   const { data: session } = useSession();
 
   const connectionMenuRef = useRef<Menu>(null);
   const connectionMenuItems = [
     {
-      label: session ? `Hi, ${session.user?.name}` : "Account",
+      label: session ? `Hi, ${session.user?.name}` : t("header.account"),
       items: session
         ? [
             {
-              label: "Disconnect",
+              label: t("header.disconnect"),
               icon: "pi pi-power-off",
               command: () => {
                 signOut({ callbackUrl: "/" });
@@ -30,7 +32,7 @@ export default function Header() {
           ]
         : [
             {
-              label: "Connect with Google",
+              label: t("header.connectWithGoogle"),
               icon: "pi pi-google",
               command: async () => {
                 await loginWithGoogle();

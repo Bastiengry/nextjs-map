@@ -18,15 +18,26 @@ describe("DlgOpenProject component", () => {
   test("should display well", async () => {
     render(<DlgOpenProject onCancel={() => {}} onOpenProject={() => {}} />);
 
+    // Gets the dialog.
     const dlgOpenProject = await screen.findByLabelText("dlg-open-project");
+
+    // Checks the dialog label .
+    within(dlgOpenProject).getByText("dlgOpenProject.title");
 
     // Gets the project selector field.
     const projectLabelField = within(dlgOpenProject).getByLabelText(
       "project-selector-field",
     );
 
-    // Checks the project selector label.
-    within(projectLabelField).getByText("Project label");
+    //Gets the label for the input representing the project label.
+    const projectLabelFieldLabel = within(projectLabelField).getByLabelText(
+      "project-selector-label",
+    );
+
+    // Checks the label of the input for the project label.
+    expect(projectLabelFieldLabel).toHaveTextContent(
+      "dlgOpenProject.projectSelector.label",
+    );
 
     // Checks the presence of the selector for the project.
     within(projectLabelField).getByLabelText("project-selector-field-select");
@@ -34,14 +45,14 @@ describe("DlgOpenProject component", () => {
     // Checks the presence of the button to validate.
     const validateBtn =
       within(dlgOpenProject).getByLabelText("validate-button");
-    expect(validateBtn).toHaveTextContent("OK");
+    expect(validateBtn).toHaveTextContent("dlgOpenProject.validateBtn.label");
 
     // Checks that the validate button is disabled when no selection is done.
     expect(validateBtn).toBeDisabled();
 
     // Checks the presence of the button to cancel.
     const cancelBtn = within(dlgOpenProject).getByLabelText("cancel-button");
-    expect(cancelBtn).toHaveTextContent("Cancel");
+    expect(cancelBtn).toHaveTextContent("dlgOpenProject.cancelBtn.label");
   });
 
   test("should call the good callback when clicking on the button to validate", async () => {

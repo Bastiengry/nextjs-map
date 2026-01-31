@@ -7,6 +7,7 @@ import { LatLngLiteral } from "leaflet";
 import { Project, ProjectCircuit } from "../../types/Project";
 import { Button } from "primereact/button";
 import { numberArrayToLatLng } from "../../util/geomUtils";
+import { useTranslation } from "react-i18next";
 
 /**
  * Properties for the sidebar component.
@@ -31,6 +32,8 @@ export default function MapSidebar({
   onVisibilityChanged,
   onMapPanTo,
 }: MapSidebarProps) {
+  const { t } = useTranslation();
+
   /**
    *
    * @param item Renderer for a single circuit menu item.
@@ -62,7 +65,7 @@ export default function MapSidebar({
             aria-label="locate-button"
             onClick={() => {
               onMapPanTo(
-                numberArrayToLatLng(circuit?.geometry?.coordinates?.[0])
+                numberArrayToLatLng(circuit?.geometry?.coordinates?.[0]),
               );
             }}
           />
@@ -77,7 +80,7 @@ export default function MapSidebar({
   const menuCircuitItems: MenuItem[] = useMemo(
     () => [
       {
-        label: "Circuits",
+        label: t("map.sidebar.circuits"),
         icon: "pi pi-th-large",
         data: project,
         items: project?.circuits?.map((circuit: ProjectCircuit) => ({
@@ -88,21 +91,21 @@ export default function MapSidebar({
         })),
       },
     ],
-    [project]
+    [project],
   );
 
   return (
     <>
       <div
-        className="flex flex-col h-full m-3 gap-2 w-60"
+        className="flex flex-col h-full m-3 gap-2 w-64"
         aria-label="map-sidebar"
       >
-        <div className="flex flex-row mb-5">
+        <div className="flex flex-row mb-5 gap-2">
           <div
             className="flex flex-1 justify-center items-center font-bold text-2xl"
             aria-label="title"
           >
-            Project details
+            {t("map.sidebar.projectDetails")}
           </div>
           <Button
             className="flex-none"

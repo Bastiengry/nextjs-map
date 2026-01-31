@@ -34,8 +34,9 @@ describe("MapAddMarkerControl component", () => {
     // Gets the button of the control.
     const button = within(control).getByLabelText("add-marker-control-button");
 
-    // Checks the icon.
+    // Checks the button.
     expect(button).toHaveClass("pi-thumbtack");
+    expect(button.title).toBe("map.control.addMarker.title");
   });
 
   test("should call the good callback when clicking on the button to start to add markers", async () => {

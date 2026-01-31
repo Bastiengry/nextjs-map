@@ -10,6 +10,7 @@ import {
   latLngsToLineString,
 } from "../../util/geomUtils";
 import MapModes from "../../types/MapMode";
+import { useTranslation } from "react-i18next";
 
 /**
  * Component properties.
@@ -48,6 +49,8 @@ export const MapAddPolylineControl = ({
   onClickValidateAddPolyline,
   onClickCancelAddPolyline,
 }: MapAddPolylineControlProps) => {
+  const { t } = useTranslation();
+
   /**
    * Stabilizes the map mode.
    */
@@ -180,7 +183,7 @@ export const MapAddPolylineControl = ({
         );
         buttonStart.ariaLabel = "add-polyline-control-button-start";
         buttonStartRef.current = buttonStart;
-        buttonStart.title = "Draw shape";
+        buttonStart.title = t("map.control.addPolyline.drawPolyline");
         buttonStart.style.display = "inline-block";
         buttonStart.style.color = "#000000";
 
@@ -191,7 +194,7 @@ export const MapAddPolylineControl = ({
         );
         buttonValidate.ariaLabel = "add-polyline-control-button-validate";
         buttonValidateRef.current = buttonValidate;
-        buttonValidate.title = "Validate shape";
+        buttonValidate.title = t("map.control.addPolyline.btnValidate.title");
         buttonValidate.style.display = "none";
 
         const buttonCancel = L.DomUtil.create(
@@ -201,7 +204,7 @@ export const MapAddPolylineControl = ({
         );
         buttonCancel.ariaLabel = "add-polyline-control-button-cancel";
         buttonCancelRef.current = buttonCancel;
-        buttonCancel.title = "Cancel shape";
+        buttonCancel.title = t("map.control.addPolyline.btnCancel.title");
         buttonCancel.style.display = "none";
 
         L.DomEvent.on(

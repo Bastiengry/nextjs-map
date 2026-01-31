@@ -17,15 +17,26 @@ describe("DlgEditProject component", () => {
       />,
     );
 
+    // Gets the dialog.
     const dlgEditProject = await screen.findByLabelText("dlg-edit-project");
+
+    // Checks the dialog label .
+    within(dlgEditProject).getByText("dlgEditProject.title");
 
     // Gets the project label field.
     const projectLabelField = within(dlgEditProject).getByLabelText(
       "project-label-field",
     );
 
-    // Checks the project label (label).
-    within(projectLabelField).getByText("Project label");
+    //Gets the label for the input representing the project label.
+    const projectLabelFieldLabel = within(projectLabelField).getByLabelText(
+      "project-label-field-label",
+    );
+
+    // Checks the label of the input for the project label.
+    expect(projectLabelFieldLabel).toHaveTextContent(
+      "dlgEditProject.projectLabelField.label",
+    );
 
     // Checks the presence of the input for the project label.
     within(projectLabelField).getByLabelText("project-label-field-input");
@@ -33,11 +44,11 @@ describe("DlgEditProject component", () => {
     // Checks the presence of the button to validate.
     const validateBtn =
       within(dlgEditProject).getByLabelText("validate-button");
-    expect(validateBtn).toHaveTextContent("OK");
+    expect(validateBtn).toHaveTextContent("dlgEditProject.validateBtn.label");
 
     // Checks the presence of the button to cancel.
     const cancelBtn = within(dlgEditProject).getByLabelText("cancel-button");
-    expect(cancelBtn).toHaveTextContent("Cancel");
+    expect(cancelBtn).toHaveTextContent("dlgEditProject.cancelBtn.label");
   });
 
   test("should call the good callback when clicking on the button to validate", async () => {

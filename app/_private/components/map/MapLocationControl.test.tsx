@@ -28,7 +28,7 @@ describe("MapLocationControl component", () => {
 
     // Checks the button.
     expect(button).toHaveClass("pi-map-marker");
-    expect(button.title).toBe("Center on your position");
+    expect(button.title).toBe("map.control.location.title");
   });
 
   test("should react to the click on the button of the control to go to the current location", async () => {

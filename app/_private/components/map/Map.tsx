@@ -13,7 +13,7 @@ import MapSidebar from "./MapSidebar";
 import { MapSidebarMenuControl } from "./MapSidebarMenuControl";
 import { MapAddPolylineControl } from "./MapAddPolylineControl";
 import { MapAddMarkerControl } from "./MapAddMarkerControl";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { MapLocationControl } from "./MapLocationControl";
 import { Project, ProjectCircuit } from "../../types/Project";
 import { GeometryLineString, GeometryPoint } from "../../types/Geometry";
@@ -29,6 +29,7 @@ import MapInstanceSetter from "./MapInstanceSetter";
 import { MapRoutingMachineControl } from "./MapRoutingMachineControl";
 import { RouteResult } from "../../types/leaflet-routing-machine";
 import * as turf from "@turf/turf";
+import { useTranslation } from "react-i18next";
 
 export interface MapProps {
   position: L.LatLngLiteral;
@@ -58,6 +59,7 @@ export default function Map({
   onUpdateCircuitGeometry,
   onAddMarker,
 }: MapProps) {
+  const { t } = useTranslation();
   const mapRef = useRef<L.Map | null>(null);
   const [mapMode, setMapMode] = useState<string>(MapModes.VIEW);
   const [visibleSidebar, setVisibleSidebar] = useState<boolean>(true);
@@ -152,14 +154,14 @@ export default function Map({
         onRemoveCircuit(circuitToDelete);
       }
     },
-    [onRemoveCircuit],
+    [onRemoveCircuit, selectedPolylineId],
   );
 
   /**
    * Deletes the selected circuit.
    */
   const deleteSelectedCircuit = useCallback(() => {
-    if (selectedPolylineId) {
+    if (selectedPolylineId !== null) {
       deleteCircuit(selectedPolylineId);
     }
   }, [selectedPolylineId, deleteCircuit]);
@@ -200,7 +202,7 @@ export default function Map({
         };
 
         // Transmits the modification to the App component.
-        onEditCircuit(updatedCircuit);
+        onUpdateCircuitGeometry(updatedCircuit);
       }
     },
     [project, onEditCircuit],
@@ -220,6 +222,33 @@ export default function Map({
         const updatedCircuit: ProjectCircuit = {
           ...circuitToModify,
           geometry: latLngsToLineString(newLatLngs),
+        };
+        onUpdateCircuitGeometry(updatedCircuit);
+      }
+    },
+    [onUpdateCircuitGeometry],
+  );
+
+  const deletePointFromCircuit = useCallback(
+    (id: number, indexToDelete: number) => {
+      let circuitToModify =
+        project?.circuits?.find((circ) => circ.id === id) || null;
+      if (circuitToModify) {
+        if (circuitToModify.geometry.coordinates.length <= 2) {
+          alert(t("circuit.circuitMustContainAtLeast2Points"));
+          return;
+        }
+
+        const updatedCircuit: ProjectCircuit = {
+          ...circuitToModify,
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              ...circuitToModify.geometry.coordinates.filter(
+                (_, index) => index !== indexToDelete,
+              ),
+            ],
+          },
         };
         onUpdateCircuitGeometry(updatedCircuit);
       }
@@ -317,7 +346,7 @@ export default function Map({
    * @returns calculated route.
    */
   const calculateRouteForSelectedPolyline = async () => {
-    if (selectedPolylineId) {
+    if (selectedPolylineId !== null) {
       const selectedCircuitGeometry = project?.circuits?.find(
         (circ) => circ.id === selectedPolylineId,
       )?.geometry;
@@ -349,7 +378,7 @@ export default function Map({
           />
         </div>
       )}
-      <div id="map" className="w-full h-full">
+      <div id="map" data-testid="map" className="w-full h-full">
         {loaded && (
           <MapContainer
             center={position}
@@ -363,11 +392,16 @@ export default function Map({
               }}
             />
             <TileLayer
+              aria-label="tile-layer"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {project?.markers?.map((marker) => (
-              <Marker key={marker.id} position={pointToLatLng(marker.point)} />
+              <Marker
+                key={marker.id}
+                aria-label={`map-marker-${marker.id}`}
+                position={pointToLatLng(marker.point)}
+              />
             ))}
             <CircuitLayer
               mapMode={mapMode}
@@ -378,6 +412,7 @@ export default function Map({
               onDelete={deleteCircuit}
               onAddPointToCircuit={addPointToCircuit}
               onUpdateCircuitGeometry={updateCircuitGeometry}
+              onDeletePointFromCircuit={deletePointFromCircuit}
             />
             {!visibleSidebar && (
               <MapSidebarMenuControl

@@ -27,7 +27,9 @@ describe("ProjectToolbar component", () => {
     const titleComp = within(projectToolbar).getByLabelText(
       "current-project-text",
     );
-    expect(titleComp).toHaveValue("No project selected");
+    expect(titleComp).toHaveValue(
+      "projectToolbar.projectNameInput.noProjectSelect",
+    );
 
     // Checks the presence of the button to edit a project.
     within(projectToolbar).getByLabelText("edit-project-button");
@@ -145,7 +147,9 @@ describe("ProjectToolbar component", () => {
     const editProjectBtn = within(projectToolbar).getByLabelText(
       "edit-project-button",
     );
-    const mainBtnInEditProjectBtn = within(editProjectBtn).getByText("Edit");
+    const mainBtnInEditProjectBtn = within(editProjectBtn).getByLabelText(
+      "projectToolbar.editBtn.label",
+    );
 
     // Clicks on the button to edit a project.
     await userEvent.click(mainBtnInEditProjectBtn);
@@ -185,7 +189,9 @@ describe("ProjectToolbar component", () => {
     await userEvent.click(expandMenuInEditProjectBtn!);
 
     // Gets the delete option.
-    const deleteOption = await screen.findByText("Delete");
+    const deleteOption = await screen.findByText(
+      "projectToolbar.deleteBtn.label",
+    );
 
     // Clicks on the delete option.
     await userEvent.click(deleteOption);
