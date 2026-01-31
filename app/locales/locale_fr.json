@@ -1,0 +1,106 @@
+{
+  "circuit": {
+    "addPoint": "Ajouter un point",
+    "editCircuitConfiguration": "Editer la configuration du circuit",
+    "deleteCircuit": "Supprimer le circuit",
+    "confirmDeleteCircuit": "Voulez-vous vraiment supprimer le circuit ?",
+    "deletePoint": "Supprimer le point",
+    "circuitMustContainAtLeast2Points": "Un circuit doit avoir au moins deux points."
+  },
+  "header": {
+    "account": "Compte",
+    "connectWithGoogle": "Se connecter avec Google",
+    "disconnect": "Déconnecter"
+  },
+  "map": {
+    "control": {
+      "addMarker": {
+        "title": "Add a marker"
+      },
+      "addPolyline": {
+        "btnCancel": {
+          "title": "Annuler"
+        },
+        "btnValidate": {
+          "title": "Valider"
+        },
+        "drawPolyline": "Dessiner une polyligne"
+      },
+      "addressSearch": {
+        "inputSearch": {
+          "placeholder": "Entrer une adresse..."
+        }
+      },
+      "location": {
+        "title": "Centrer sur votre position"
+      },
+      "routingMachine": {
+        "title": "Transformer la polyligne sélectionnée pour qu'elle suive des chemins réels"
+      },
+      "showSidebar": {
+        "title": "Afficher le panneau latéral"
+      }
+    },
+    "sidebar": {
+      "circuits": "Circuits",
+      "projectDetails": "Détails du projet"
+    }
+  },
+  "dlgAddCircuit": {
+    "cancelBtn": {
+      "label": "Annuler"
+    },
+    "circuitColorField": {
+      "label": "Couleur du circuit",
+      "helper": "Sélectionner une couleur de circuit."
+    },
+    "circuitLabelField": {
+      "label": "Libellé du circuit",
+      "helper": "Entrer un libellé de circuit."
+    },
+    "title": "Create circuit",
+    "validateBtn": {
+      "label": "OK"
+    }
+  },
+  "dlgAddProject": {
+    "cancelBtn": {
+      "label": "Annuler"
+    },
+    "projectLabelField": {
+      "label": "Libellé du projet",
+      "helper": "Entrer un libellé de projet."
+    },
+    "title": "Créer un project",
+    "validateBtn": {
+      "label": "OK"
+    }
+  },
+  "dlgOpenProject": {
+    "cancelBtn": {
+      "label": "Annuler"
+    },
+    "projectSelector": {
+      "dropdown": {
+        "placeholder": "Sélectionner un projet"
+      },
+      "helper": "Sélectionner un projet",
+      "label": "Libellé du projet"
+    },
+    "title": "Ouvrir un project",
+    "validateBtn": {
+      "label": "OK"
+    }
+  },
+  "projectToolbar": {
+    "deleteBtn": {
+      "label": "Supprimer"
+    },
+    "editBtn": {
+      "label": "Editer"
+    },
+    "projectNameInput": {
+      "noProjectSelect": "Aucun projet sélectionné"
+    }
+  }
+}

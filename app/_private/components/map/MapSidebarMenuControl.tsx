@@ -2,6 +2,7 @@
 
 import L from "leaflet";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useMap } from "react-leaflet";
 
 /**
@@ -29,6 +30,8 @@ interface MapSidebarMenuControlProps {
 export const MapSidebarMenuControl = ({
   onClickOpenSideMenu,
 }: MapSidebarMenuControlProps) => {
+  const { t } = useTranslation();
+
   /**
    * Stabilizes the callback.
    *
@@ -69,6 +72,7 @@ export const MapSidebarMenuControl = ({
           container,
         );
         button.ariaLabel = "sidebar-menu-control-button";
+        button.title = t("map.control.showSidebar.title");
 
         L.DomEvent.disableClickPropagation(container);
 

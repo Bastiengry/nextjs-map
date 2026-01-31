@@ -37,7 +37,7 @@ describe("The MapSidebar component ", () => {
 
     // Check the presence of the title.
     const titleElem = within(mapSideBarElem).getByLabelText("title");
-    expect(titleElem).toHaveTextContent("Project details");
+    expect(titleElem).toHaveTextContent("map.sidebar.projectDetails");
 
     // Check the presence of the close button.
     within(mapSideBarElem).getByLabelText("close-button");

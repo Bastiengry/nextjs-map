@@ -34,8 +34,9 @@ describe("MapRoutingMachineControl component", () => {
       "routing-machine-control-button",
     );
 
-    // Checks the icon.
+    // Checks the button.
     expect(button).toHaveClass("pi-map");
+    expect(button.title).toBe("map.control.routingMachine.title");
   });
 
   it("should call the good callback when clicking on the button to create the route of the selected polyline", async () => {

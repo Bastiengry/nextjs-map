@@ -5,6 +5,7 @@ import L from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import MapModes from "../../types/MapMode";
+import { useTranslation } from "react-i18next";
 
 /**
  * Component properties.
@@ -31,6 +32,7 @@ interface MapAddressSearchControlProps {
 export const MapAddressSearchControl = ({
   mapMode,
 }: MapAddressSearchControlProps) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(undefined);
 
   /** Gets the map. */
@@ -46,6 +48,7 @@ export const MapAddressSearchControl = ({
       },
       onAdd: function () {
         const container = L.DomUtil.create("div");
+        container.ariaLabel = "address-search-control";
         containerRef.current = container;
 
         L.DomEvent.disableClickPropagation(container);
@@ -54,9 +57,10 @@ export const MapAddressSearchControl = ({
           container,
           process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY || "",
           {
-            placeholder: "Enter an address",
-          }
+            placeholder: t("map.control.addressSearch.inputSearch.placeholder"),
+          },
         );
+        container.ariaLabel = "address-search-control-input";
 
         autocomplete.on("select", (location) => {
           const { lat, lon } = location.properties;

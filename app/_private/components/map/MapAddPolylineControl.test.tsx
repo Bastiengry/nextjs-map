@@ -42,7 +42,7 @@ describe("MapAddPolylineControl component", () => {
     // Checks the start button.
     expect(startBtn).toHaveClass("pi-pen-to-square");
     expect(startBtn.style.color).toBe("rgb(0, 0, 0)");
-    expect(startBtn.title).toBe("Draw shape");
+    expect(startBtn.title).toBe("map.control.addPolyline.drawPolyline");
 
     // Gets the validate button.
     const validateBtn: HTMLButtonElement = within(control).getByLabelText(
@@ -52,7 +52,7 @@ describe("MapAddPolylineControl component", () => {
     // Checks the validate button.
     expect(validateBtn).toHaveClass("pi-check");
     expect(validateBtn.style.display).toBe("none");
-    expect(validateBtn.title).toBe("Validate shape");
+    expect(validateBtn.title).toBe("map.control.addPolyline.btnValidate.title");
 
     // Gets the cancel button.
     const cancelBtn: HTMLButtonElement = within(control).getByLabelText(
@@ -62,7 +62,7 @@ describe("MapAddPolylineControl component", () => {
     // Checks the cancel button.
     expect(cancelBtn).toHaveClass("pi-times");
     expect(cancelBtn.style.display).toBe("none");
-    expect(cancelBtn.title).toBe("Cancel shape");
+    expect(cancelBtn.title).toBe("map.control.addPolyline.btnCancel.title");
   });
 
   it("should call the good callback when clicking on the button to start to a polyline", async () => {

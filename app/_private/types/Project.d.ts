@@ -9,7 +9,6 @@ export interface ProjectCircuit {
 
 export interface ProjectMarker {
   id?: number;
-  label: string;
   point: GeometryPoint;
 }
 

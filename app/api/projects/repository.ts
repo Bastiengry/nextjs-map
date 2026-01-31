@@ -11,7 +11,7 @@ export const getAllProjects = async () => {
     const project = convertPrismaProjectToProject(
       prismaProject,
       projectCircuits,
-      projectMarkers
+      projectMarkers,
     );
     projects.push(project);
   }
@@ -26,8 +26,8 @@ export const getProjectCircuits = async (projectId: number) => {
 
 export const getProjectMarkers = async (projectId: number) => {
   return await prisma.$queryRaw<
-    { id: number; label: string; point: string }[]
-  >`SELECT id, label, ST_AsGeoJSON(point) as point FROM project_marker WHERE project_id=${projectId};`;
+    { id: number; point: string }[]
+  >`SELECT id, ST_AsGeoJSON(point) as point FROM project_marker WHERE project_id=${projectId};`;
 };
 
 export const getProjectById = async (id: number) => {
@@ -49,7 +49,7 @@ export const getProjectById = async (id: number) => {
   return convertPrismaProjectToProject(
     prismaProject,
     prismaProjectCircuits,
-    prismaProjectMarkers
+    prismaProjectMarkers,
   );
 };
 
@@ -89,7 +89,7 @@ export const createProject = async (project: any) => {
         createdProject.id,
         circuit.label,
         circuit.color,
-        JSON.stringify(circuit.geometry)
+        JSON.stringify(circuit.geometry),
       );
     }
   }
@@ -98,16 +98,14 @@ export const createProject = async (project: any) => {
     for (const marker of project.markers) {
       await prisma.$executeRawUnsafe(
         `
-        INSERT INTO "project_marker" (project_id, label, point)
+        INSERT INTO "project_marker" (project_id, point)
         VALUES (
           $1,
-          $2,
-          ST_SetSRID(ST_GeomFromGeoJSON($3), 4326)
+          ST_SetSRID(ST_GeomFromGeoJSON($2), 4326)
         )
         `,
         createdProject.id,
-        marker.label,
-        JSON.stringify(marker.point)
+        JSON.stringify(marker.point),
       );
     }
   }
@@ -144,7 +142,7 @@ export const updateProjectById = async (id: number, project: any) => {
         project.id,
         circuit.label,
         circuit.color,
-        JSON.stringify(circuit.geometry)
+        JSON.stringify(circuit.geometry),
       );
     }
   }
@@ -153,16 +151,14 @@ export const updateProjectById = async (id: number, project: any) => {
     for (const marker of project.markers) {
       await prisma.$executeRawUnsafe(
         `
-        INSERT INTO "project_marker" (project_id, label, point)
+        INSERT INTO "project_marker" (project_id, point)
         VALUES (
           $1,
-          $2,
-          ST_SetSRID(ST_GeomFromGeoJSON($3), 4326)
+          ST_SetSRID(ST_GeomFromGeoJSON($2), 4326)
         )
         `,
         project.id,
-        marker.label,
-        JSON.stringify(marker.point)
+        JSON.stringify(marker.point),
       );
     }
   }
@@ -186,7 +182,7 @@ export const deleteProjectById = async (id: number) => {
 export default function convertPrismaProjectToProject(
   prismaProject: any,
   prismaProjectCircuits: any[],
-  prismaProjectMarkers: any[]
+  prismaProjectMarkers: any[],
 ) {
   return {
     id: prismaProject.id,
@@ -201,7 +197,6 @@ export default function convertPrismaProjectToProject(
     })),
     markers: prismaProjectMarkers.map((prismaPrjMarker: any) => ({
       id: prismaPrjMarker.id,
-      label: prismaPrjMarker.label,
       point: prismaPrjMarker.point ? JSON.parse(prismaPrjMarker.point) : null,
     })),
   };

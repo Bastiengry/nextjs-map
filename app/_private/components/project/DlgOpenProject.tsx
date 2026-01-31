@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { useProjectIdLabelQuery } from "../../api/useProjectQuery";
 import { ProjectIdLabel } from "../../types/Project";
+import { useTranslation } from "react-i18next";
 
 interface DlgOpenProjectProps {
   onCancel: () => void;
@@ -14,6 +15,7 @@ export default function DlgOpenProject({
   onOpenProject,
   onCancel,
 }: DlgOpenProjectProps) {
+  const { t } = useTranslation();
   const [selectedProject, setSelectedProject] = useState<ProjectIdLabel>();
   const {
     data: projectIdLabels = [],
@@ -23,7 +25,7 @@ export default function DlgOpenProject({
 
   return (
     <Dialog
-      header="Open project"
+      header={t("dlgOpenProject.title")}
       aria-label="dlg-open-project"
       visible={true}
       onHide={() => onCancel()}
@@ -33,7 +35,12 @@ export default function DlgOpenProject({
           className="flex flex-col gap-2"
           aria-label="project-selector-field"
         >
-          <label htmlFor="selectedProjectId">Project label</label>
+          <label
+            aria-label="project-selector-label"
+            htmlFor="selectedProjectId"
+          >
+            {t("dlgOpenProject.projectSelector.label")}
+          </label>
           <Dropdown
             id="selectedProject"
             aria-label="project-selector-field-select"
@@ -43,7 +50,9 @@ export default function DlgOpenProject({
             }
             options={projectIdLabels}
             optionLabel="label"
-            placeholder="Select a project"
+            placeholder={t(
+              "dlgOpenProject.projectSelector.dropdown.placeholder",
+            )}
             pt={{
               input: {
                 className: "font-extrabold",
@@ -52,12 +61,14 @@ export default function DlgOpenProject({
             checkmark={true}
             highlightOnSelect={false}
           />
-          <small id="label-help">Select a project.</small>
+          <small id="label-help">
+            {t("dlgOpenProject.projectSelector.helper")}
+          </small>
         </div>
         <div className="flex flex-row justify-end gap-2">
           <Button
-            label="OK"
             aria-label="validate-button"
+            label={t("dlgOpenProject.validateBtn.label")}
             onClick={() =>
               !!selectedProject && onOpenProject(selectedProject?.id)
             }
@@ -65,7 +76,7 @@ export default function DlgOpenProject({
           />
           <Button
             aria-label="cancel-button"
-            label="Cancel"
+            label={t("dlgOpenProject.cancelBtn.label")}
             onClick={() => onCancel()}
           />
         </div>

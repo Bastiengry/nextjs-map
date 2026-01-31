@@ -7,6 +7,7 @@ import { useMapEvents } from "react-leaflet";
 import MapModes from "../../types/MapMode";
 import { latLngToPoint } from "../../util/geomUtils";
 import { GeometryPoint } from "../../types/Geometry";
+import { useTranslation } from "react-i18next";
 
 /**
  * Component properties.
@@ -42,6 +43,8 @@ export const MapAddMarkerControl = ({
   onClickEndAddMarker,
   onAddMarker,
 }: MapAddMarkerControlProps) => {
+  const { t } = useTranslation();
+
   /**
    * Stabilizes the buttons of the control to be able to access to them out of the useEffect where they are created.
    */
@@ -131,13 +134,13 @@ export const MapAddMarkerControl = ({
 
         L.DomEvent.disableClickPropagation(container);
 
-        container.title = "Add marker";
         const button = L.DomUtil.create(
           "button",
           "pi pi-thumbtack bg-white p-1 border-gray-400 border-1 w-8 h-8 cursor-pointer",
           container,
         );
         button.ariaLabel = "add-marker-control-button";
+        button.title = t("map.control.addMarker.title");
         buttonRef.current = button;
 
         L.DomEvent.on(

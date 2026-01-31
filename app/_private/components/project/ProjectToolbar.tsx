@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { SplitButton } from "primereact/splitbutton";
 import { Project } from "../../types/Project";
+import { useTranslation } from "react-i18next";
 
 /**
  * Properties for the ProjectToolbar component.
@@ -34,6 +35,8 @@ export default function ProjectToolbar({
   onEditProject,
   onDeleteProject,
 }: ProjectToolbarProps) {
+  const { t } = useTranslation();
+
   const onClickCreateProject = () => {
     onCreateProject();
   };
@@ -65,7 +68,7 @@ export default function ProjectToolbar({
    */
   const projectExtendBtnItems = [
     {
-      label: "Delete",
+      label: t("projectToolbar.deleteBtn.label"),
       icon: "pi pi-trash",
       command: onClickDeleteProject,
       disabled: !project?.id,
@@ -95,7 +98,10 @@ export default function ProjectToolbar({
           aria-label="current-project-text"
           disabled
           className="flex-1 p-inputtext-sm"
-          value={project?.label || "No project selected"}
+          value={
+            project?.label ||
+            t("projectToolbar.projectNameInput.noProjectSelect")
+          }
           pt={{
             root: {
               style: {
@@ -109,7 +115,7 @@ export default function ProjectToolbar({
         <SplitButton
           aria-label="edit-project-button"
           icon="pi pi-pencil"
-          label="Edit"
+          label={t("projectToolbar.editBtn.label")}
           severity="secondary"
           onClick={onClickEditProject}
           model={projectExtendBtnItems}

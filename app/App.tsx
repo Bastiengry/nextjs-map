@@ -22,6 +22,7 @@ import DlgAddCircuit from "./_private/components/circuit/DlgAddCircuit";
 import DlgEditCircuit from "./_private/components/circuit/DlgEditCircuit";
 import { useSession } from "next-auth/react";
 import ProjectToolbarWrapper from "./_private/components/project/ProjectToolbarWrapper";
+import "./i18n";
 
 export default function App() {
   const { data: session, status } = useSession();
@@ -153,10 +154,16 @@ export default function App() {
       prj.markers = [
         ...prj.markers,
         {
-          label: "",
           point: markerPoint,
         },
       ];
+    },
+    [],
+  );
+
+  const deleteMarkerFromProject = useCallback(
+    (prj: Project, markerId: number) => {
+      prj.markers = prj.markers?.filter((marker) => marker.id !== markerId);
     },
     [],
   );
@@ -181,6 +188,17 @@ export default function App() {
       if (project) {
         const prj = _.cloneDeep(project);
         addMarkerToProject(prj, markerPoint);
+        putProject.mutate(prj);
+      }
+    },
+    [project],
+  );
+
+  const onDeleteMarkerPoint = useCallback(
+    (markerId: number) => {
+      if (project) {
+        const prj = _.cloneDeep(project);
+        deleteMarkerFromProject(prj, markerId);
         putProject.mutate(prj);
       }
     },
@@ -216,6 +234,7 @@ export default function App() {
                 setEditMode={setEditMode}
                 onAddPolyline={onAddCircuitPolylineDemanded}
                 onAddMarker={onAddMarkerPoint}
+                onDeleteMarker={onDeleteMarkerPoint}
                 onEditCircuit={onEditCircuit}
                 onRemoveCircuit={onRemoveCircuit}
                 onUpdateCircuitGeometry={onUpdateCircuitGeometry}

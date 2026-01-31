@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import { useMap } from "react-leaflet";
 import MapModes from "../../types/MapMode";
+import { useTranslation } from "react-i18next";
 
 /**
  * Component properties.
@@ -33,6 +34,7 @@ export const MapRoutingMachineControl = ({
   mapMode,
   onClickCreateRoute,
 }: MapRoutingMachineControlProps) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(undefined);
   /**
    * Stabilizes the callbacks.
@@ -68,13 +70,13 @@ export const MapRoutingMachineControl = ({
 
         L.DomEvent.disableClickPropagation(container);
 
-        container.title = "Make selection follow the paths";
         const button = L.DomUtil.create(
           "button",
           "pi pi-map bg-white border-gray-400 border-1 w-8 h-8 cursor-pointer",
           container,
         );
         button.ariaLabel = "routing-machine-control-button";
+        button.title = t("map.control.routingMachine.title");
 
         L.DomEvent.on(
           button,

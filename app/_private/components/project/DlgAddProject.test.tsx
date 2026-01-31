@@ -6,26 +6,37 @@ describe("DlgAddProject component", () => {
   test("should display well", async () => {
     render(<DlgAddProject onCancel={() => {}} onCreateProject={() => {}} />);
 
+    // Gets the dialog.
     const dlgAddProject = await screen.findByLabelText("dlg-add-project");
+
+    // Checks the dialog label .
+    within(dlgAddProject).getByText("dlgAddProject.title");
 
     // Gets the project label field.
     const projectLabelField = within(dlgAddProject).getByLabelText(
       "project-label-field",
     );
 
-    // Checks the project label (label).
-    within(projectLabelField).getByText("Project label");
+    //Gets the label for the input representing the project label.
+    const projectLabelFieldLabel = within(projectLabelField).getByLabelText(
+      "project-label-field-label",
+    );
+
+    // Checks the label of the input for the project label.
+    expect(projectLabelFieldLabel).toHaveTextContent(
+      "dlgAddProject.projectLabelField.label",
+    );
 
     // Checks the presence of the input for the project label.
     within(projectLabelField).getByLabelText("project-label-field-input");
 
     // Checks the presence of the button to validate.
     const validateBtn = within(dlgAddProject).getByLabelText("validate-button");
-    expect(validateBtn).toHaveTextContent("OK");
+    expect(validateBtn).toHaveTextContent("dlgAddProject.validateBtn.label");
 
     // Checks the presence of the button to cancel.
     const cancelBtn = within(dlgAddProject).getByLabelText("cancel-button");
-    expect(cancelBtn).toHaveTextContent("Cancel");
+    expect(cancelBtn).toHaveTextContent("dlgAddProject.cancelBtn.label");
   });
 
   test("should call the good callback when clicking on the button to validate", async () => {

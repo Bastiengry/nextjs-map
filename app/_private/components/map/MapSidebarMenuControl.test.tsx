@@ -28,6 +28,7 @@ describe("MapSidebarMenuControl component", () => {
 
     // Checks the icon.
     expect(button).toHaveClass("pi-bars");
+    expect(button.title).toBe("map.control.showSidebar.title");
   });
 
   test("should call the good callback when clicking on the control", async () => {

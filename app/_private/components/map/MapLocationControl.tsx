@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import { useMapEvents } from "react-leaflet";
 import MapModes from "../../types/MapMode";
+import { useTranslation } from "react-i18next";
 
 /**
  * Component properties.
@@ -29,6 +30,7 @@ interface MapLocationControlProps {
  * @returns null.
  */
 export const MapLocationControl = ({ mapMode }: MapLocationControlProps) => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(undefined);
 
   /**
@@ -58,7 +60,7 @@ export const MapLocationControl = ({ mapMode }: MapLocationControlProps) => {
           container,
         );
         button.ariaLabel = "location-control-button";
-        button.title = "Center on your position";
+        button.title = t("map.control.location.title");
 
         L.DomEvent.on(
           button,
